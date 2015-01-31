@@ -3,15 +3,18 @@
  */
 package analyze;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import edu.umd.cs.findbugs.BugAnnotation;
@@ -70,25 +73,46 @@ public class AnalyzeAndroidApps {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws PluginException, IOException, InterruptedException {
-		if (args.length < 2) {
-			System.err.println("SYNOPSIS\n"
-							+ "java -jar patchedfindbugs.jar [-count|-intents] android-app.jar \n\n"
-							+ "-count\t\tcount all intent constructor calls\n"
-							+ "-intents\tExtract static parameters for intent constructor calls");
-		} else {
-			File input = new File(args[1]);
-			if (!input.exists()){
-				System.err.println("Input file \""+input+"\" does not exist!");
-			} else if ("-count".equals(args[0])) {
-				System.out.println(countIntentConstructors(input));
-			} else if ("-intents".equals(args[0])) {
-				System.out.println(findIntents(input));
-			}else{
-				System.err.println("Unknown command: \""+args[0]+"\"");
-			}
-		}
+		
+		ArrayList<String> apps = new ArrayList<String>();
+		
+		FileReader reader = new FileReader("apps.txt");
+		BufferedReader br = new BufferedReader(reader);
+		String line = null;
+		
+		while((line = br.readLine()) != null) {
+            apps.add(line);
+        }
+		br.close();
+		reader.close();
 
+        int count = 1;
+		String root = "/Users/wind/Desktop/network/apps/";
+		
+		for (String app: apps) {
+
+			System.out.println(count + " intents extrating ... ---> " + app);
+            count++;
+
+			String appDir = root + app + "/";
+			File jar = new File(appDir + "classes.jar");
+			
+			FileWriter writer = new FileWriter(appDir + "intents.txt");
+			BufferedWriter bw  = new BufferedWriter(writer);
+			
+			try {
+				bw.write(findIntents(jar) + "\n");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			bw.close();
+			writer.close();
+
+		}
+		
 	}
+	
 	public static int countIntentConstructors(File jarfile) throws PluginException, IOException, InterruptedException{
 		AnalyzeAndroidApps a = new AnalyzeAndroidApps();
 		FindBugs2 engine = a.setUpEngine(jarfile.toString(),"FindIntentConstructors",false);
@@ -102,11 +126,12 @@ public class AnalyzeAndroidApps {
 	public static String findIntents(File jarfile) throws PluginException, IOException, InterruptedException{
 		AnalyzeAndroidApps a = new AnalyzeAndroidApps();
 		FindBugs2 engine = a.setUpEngine(jarfile.toString(),"FindIntentsViaCFG",true);
-        
+		
 		IntentStringObserver obs = new IntentStringObserver();
 		engine.getBugReporter().addObserver(obs);
 		engine.execute();
-		return obs.getIntent();
+		
+		return obs.getIntent().replaceAll(",]", "]").replaceAll(",}", "}");
 	}
 
     private FindBugs2 setUpEngine(String fileUriToJar,String detectorName,boolean useAndroidSdk) throws MalformedURLException, PluginException {
@@ -137,7 +162,7 @@ public class AnalyzeAndroidApps {
         
         project.addFile(fileUriToJar);
         if(useAndroidSdk)
-        	project.addAuxClasspathEntry("t:/downloads/android/android-sdk-windows/platforms/android-8/android.jar");
+        	project.addAuxClasspathEntry("android/android.jar");
         fixFindbugMemoryLeak();
         return engine;
     }

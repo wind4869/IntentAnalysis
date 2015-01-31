@@ -137,11 +137,11 @@ public class FindIntentsViaCFG extends CFGDetector {
 	
 	@Override
 	public void finishPass() {
-		StringBuilder sb = new StringBuilder("{:called {");
+		StringBuilder sb = new StringBuilder("{\"called\":{");
 		sb.append(printExtractedObject(intents));
-		sb.append("} :queried {");
+		sb.append("},\"queried\":{");
 		sb.append(printExtractedObject(intentsQueried));
-		sb.append("} :registered {");
+		sb.append("},\"registered\":{");
 		sb.append(printExtractedObject(receiversRegistered));
 		sb.append("}}");
 		
@@ -153,9 +153,9 @@ public class FindIntentsViaCFG extends CFGDetector {
 	private String printExtractedObject(Map<String, List> objects) {
 		StringBuilder sb = new StringBuilder();
 		for(String method:objects.keySet()){
-			sb.append(":").append(method).append(" [");
-			for (Object o : objects.get(method)) sb.append(o).append(" ");
-			sb.append("], ");
+			sb.append("\"").append(method).append("\":[");
+			for (Object o : objects.get(method)) sb.append(o).append(",");
+			sb.append("],");
 		}
 		return sb.toString();
 	}

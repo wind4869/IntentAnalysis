@@ -40,20 +40,20 @@ public class Intent {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("{");
-		sb.append(":explicit? ").append(isExplicit());
-		if (calledClass !=null)
-			sb.append(", :class ").append(toClojure(calledClass));
+		sb.append("\"explicit\":").append("\"" + isExplicit() + "\"");
+		if (calledClass != null)
+			sb.append(",\"class\":").append(toClojure(calledClass));
 		else {
 			if (action != null)
-				sb.append(", :action ").append(toClojure(action));
+				sb.append(",\"action\":").append(toClojure(action));
 			if (uri != null)
-				sb.append(", :uri ").append(toClojure(uri));
+				sb.append(",\"uri\":").append(toClojure(uri));
 			if (mimetype != null)
-				sb.append(", :mimetype ").append(toClojure(mimetype));
-			if (!extras.isEmpty())
-				sb.append(", :extras ").append(toClojure(extras));
+				sb.append(",\"mimeType\":").append(toClojure(mimetype));
+//			if (!extras.isEmpty())
+//				sb.append(", :extras ").append(toClojure(extras));
 			if (!categories.isEmpty())
-				sb.append(", :categories ").append(toClojure(categories));
+				sb.append(",\"categories\":").append(toClojure(categories));
 		}
 		sb.append("}");
 		return sb.toString();
@@ -64,12 +64,12 @@ public class Intent {
 		for(Object key:map.keySet()){
 			if(key==null)
 				key="nil";
-			sb.append(toClojure(key.toString())).append(" ");
+			sb.append(toClojure(key.toString())).append(",");
 			Object value = map.get(key);
 			if(value==null)
 				value="nil";
 			sb.append(toClojure(value.toString()));
-			sb.append(", ");
+			sb.append(",");
 		}
 		sb.append("}");
 		return sb.toString();
@@ -81,10 +81,10 @@ public class Intent {
 		return "\""+s.replaceAll("\"", "\\\\\"")+"\"";
 	}
 	public static String toClojure(Set<String> s) {
-		StringBuilder sb = new StringBuilder("#{");
+		StringBuilder sb = new StringBuilder("[");
 		for(String string:s)
-			sb.append(toClojure(string)).append(" ");
-		sb.append("}");
+			sb.append(toClojure(string)).append(",");
+		sb.append("]");
 		return sb.toString();
 	}
 

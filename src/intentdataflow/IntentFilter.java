@@ -62,11 +62,11 @@ public class IntentFilter {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("{");
-		sb.append(", :actions ").append(Intent.toClojure(actions));
-		sb.append(", :categories ").append(Intent.toClojure(categories));
-		sb.append(", :datatypes ").append(Intent.toClojure(dataTypes));
-		sb.append(", :schemes ").append(Intent.toClojure(dataSchemes));
-		sb.append(", :paths ").append(Intent.toClojure(dataPaths));
+		sb.append("\"actions\":").append(Intent.toClojure(actions));
+		sb.append(",\"categories\":").append(Intent.toClojure(categories));
+		sb.append(",\"datatypes\":").append(Intent.toClojure(dataTypes));
+		sb.append(",\"schemes\":").append(Intent.toClojure(dataSchemes));
+		sb.append(",\"paths\":").append(Intent.toClojure(dataPaths));
 		sb.append("}");
 		return sb.toString();
 	}
