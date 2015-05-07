@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/IntentAnalysis.iml" filepath="$PROJECT_DIR$/.idea/IntentAnalysis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/IntentAnalysis.iml" filepath="$PROJECT_DIR$/IntentAnalysis.iml" />
     </modules>
   </component>
 </project>
-

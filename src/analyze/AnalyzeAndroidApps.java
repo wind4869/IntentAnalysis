@@ -87,7 +87,7 @@ public class AnalyzeAndroidApps {
 		reader.close();
 
         int count = 1;
-		String root = "/Users/wind/Desktop/network/apps/";
+		String root = "/Users/wind/network/apps/";
 		
 		for (String app: apps) {
 
