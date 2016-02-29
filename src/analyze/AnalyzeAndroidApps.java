@@ -70,7 +70,7 @@ public class AnalyzeAndroidApps {
 	 * @param args
 	 * @throws PluginException 
 	 * @throws InterruptedException 
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static void main(String[] args) throws PluginException, IOException, InterruptedException {
 		
@@ -87,30 +87,34 @@ public class AnalyzeAndroidApps {
 		reader.close();
 
         int count = 1;
-		String root = "/Users/wind/network/apps/";
+		String root = "/Users/wind/workspace/network/apps/com.taobao.taobao/";
 		
 		for (String app: apps) {
 
-			System.out.println(count + " intents extrating ... ---> " + app);
+			System.out.println(count + ". intents extrating ... ---> " + app);
             count++;
 
 			String appDir = root + app + "/";
-			File jar = new File(appDir + "classes.jar");
-			
-			FileWriter writer = new FileWriter(appDir + "intents.txt");
-			BufferedWriter bw  = new BufferedWriter(writer);
-			
+
+			FileWriter writer = null;
+			BufferedWriter bw = null;
+
 			try {
+				File jar = new File(appDir + "classes.jar");
+
+				writer = new FileWriter(appDir + "intents.txt");
+				bw  = new BufferedWriter(writer);
+
 				bw.write(findIntents(jar) + "\n");
 			} catch (Exception e) {
 				e.printStackTrace();
+			} finally {
+				if (bw != null) bw.close();
+				if (writer != null) writer.close();
 			}
-			
-			bw.close();
-			writer.close();
 
 		}
-		
+
 	}
 	
 	public static int countIntentConstructors(File jarfile) throws PluginException, IOException, InterruptedException{
