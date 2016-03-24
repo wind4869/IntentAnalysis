@@ -73,28 +73,27 @@ public class AnalyzeAndroidApps {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws PluginException, IOException, InterruptedException {
+
+		ArrayList<String> versions = new ArrayList<String>();
 		
-		ArrayList<String> apps = new ArrayList<String>();
-		
-		FileReader reader = new FileReader("apps.txt");
+		FileReader reader = new FileReader("versions.txt");
 		BufferedReader br = new BufferedReader(reader);
+
+        String app = br.readLine();
 		String line = null;
 		
 		while((line = br.readLine()) != null) {
-            apps.add(line);
+			versions.add(line);
         }
 		br.close();
 		reader.close();
 
-        int count = 1;
-		String root = "/Users/wind/workspace/network/apps/com.taobao.taobao/";
+		String root = "/Users/wind/workspace/network/apps/" + app + "/";
 		
-		for (String app: apps) {
+		for (String v: versions) {
 
-			System.out.println(count + ". intents extrating ... ---> " + app);
-            count++;
-
-			String appDir = root + app + "/";
+			System.out.println(">> " + v + " extrating ... ");
+			String appDir = root + v + "/";
 
 			FileWriter writer = null;
 			BufferedWriter bw = null;
